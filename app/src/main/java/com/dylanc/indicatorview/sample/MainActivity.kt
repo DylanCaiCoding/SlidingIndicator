@@ -12,7 +12,6 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    tv.text = indicator_view.selectIndex.toString()
     val linearLayoutManager =
       LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
     val list = listOf(
