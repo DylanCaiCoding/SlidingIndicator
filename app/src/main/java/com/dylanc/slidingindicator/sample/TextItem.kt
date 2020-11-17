@@ -1,4 +1,4 @@
-package com.dylanc.indicatorview.sample
+package com.dylanc.slidingindicator.sample
 
 data class TextItem(
   val content: String,

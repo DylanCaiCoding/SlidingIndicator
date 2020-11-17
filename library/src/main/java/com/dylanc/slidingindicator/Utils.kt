@@ -1,4 +1,4 @@
-package com.dylanc.indicatorview
+package com.dylanc.slidingindicator
 
 import android.content.res.Resources
 import android.util.TypedValue

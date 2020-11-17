@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="SlidingIndicator">
+    <attr name="scaleHeight" format="dimension" />
+    <attr name="scaleWidth" format="dimension" />
+    <attr name="spanSize" format="dimension" />
+    <attr name="intervalSpanCount" format="integer" />
+    <attr name="selectedIndex" format="integer" />
+    <attr name="maxValue" format="integer" />
+    <attr name="extraScaleCount" format="integer" />
+    <attr name="scaleColor" format="color" />
+    <attr name="selectedColor" format="color" />
+    <attr name="scaleStyle">
+      <enum name="roundCap" value="-1" />
+      <enum name="square" value="-2" />
+    </attr>
+  </declare-styleable>
+</resources>

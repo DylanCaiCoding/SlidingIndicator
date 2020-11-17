@@ -1,4 +1,4 @@
-package com.dylanc.indicatorview
+package com.dylanc.slidingindicator.sample
 
 import org.junit.Test
 

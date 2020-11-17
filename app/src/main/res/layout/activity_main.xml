@@ -11,15 +11,17 @@
     android:id="@+id/recycler_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintBottom_toTopOf="@+id/indicator_view" />
+    app:layout_constraintBottom_toTopOf="@+id/indicator"
+    tools:layout_editor_absoluteX="-61dp" />
 
-  <com.dylanc.indicatorview.IndicatorView
-    android:id="@+id/indicator_view"
+  <com.dylanc.slidingindicator.SlidingIndicator
+    android:id="@+id/indicator"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
+    app:extraScaleCount="20"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintLeft_toLeftOf="parent"
     app:layout_constraintRight_toRightOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

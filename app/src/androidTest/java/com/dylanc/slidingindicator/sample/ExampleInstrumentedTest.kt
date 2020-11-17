@@ -1,4 +1,4 @@
-package com.dylanc.indicatorview.sample
+package com.dylanc.slidingindicator.sample
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

@@ -1,6 +1,7 @@
-package com.dylanc.indicatorview.sample
+package com.dylanc.slidingindicator.sample
 
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,10 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.recycler_item_text.view.*
 
 class TextAdapter(
-  private val list: List<TextItem>
+  private val list: List<TextItem>,
+  private val onItemClick: (Int) -> Unit
 ) : RecyclerView.Adapter<TextAdapter.ViewHolder>() {
 
-  private var checkedPosition = 2
+  var checkedPosition = 0
+    private set
+
+  init {
+    list[checkedPosition].isChecked = true
+  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
     ViewHolder(
@@ -29,26 +36,27 @@ class TextAdapter(
         val item = list[position - 2]
         tv_content.text = item.content
         if (item.isChecked) {
-          tv_content.setTextColor(Color.RED)
+          tv_content.setTextColor(Color.parseColor("#FF5722"))
         } else {
           tv_content.setTextColor(Color.WHITE)
         }
+        setOnClickListener {
+          onItemClick(position - 2)
+        }
       } else {
         tv_content.text = ""
-        tv_content.setTextColor(Color.WHITE)
+        setOnClickListener(null)
       }
     }
   }
 
   override fun getItemCount() = list.size + 4
 
-  fun check(position: Int) {
-    if (position < itemCount - 4) {
-      list[checkedPosition - 2].isChecked = false
-      list[position].isChecked = true
-      notifyDataSetChanged()
-      checkedPosition = position + 2
-    }
+  fun selectAt(position: Int) {
+    list[checkedPosition].isChecked = false
+    list[position].isChecked = true
+    notifyDataSetChanged()
+    checkedPosition = position
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
