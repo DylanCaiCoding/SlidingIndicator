@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var textAdapter: TextAdapter
+  private lateinit var adapter: TextAdapter
   private val list = listOf(
     TextItem("0"),
     TextItem("1"),
@@ -27,25 +27,25 @@ class MainActivity : AppCompatActivity() {
     setContentView(R.layout.activity_main)
     val linearLayoutManager =
       LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-    textAdapter = TextAdapter(list, this::onItemClick)
+    adapter = TextAdapter(list, this::onItemClick)
 
     recycler_view.apply {
-      adapter = textAdapter
+      adapter = this@MainActivity.adapter
       layoutManager = linearLayoutManager
       LinearSnapHelper().attachToRecyclerView(this)
       addOnScrollListener(object : RecyclerView.OnScrollListener() {
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-          indicator.scrollTo(dx.toFloat() / recyclerView.measuredWidth * 5)
+          sliding_indicator.scrollTo(dx.toFloat() / recyclerView.measuredWidth * 5)
         }
       })
     }
 
-    indicator.apply {
+    sliding_indicator.apply {
       maxValue = list.size - 1
-      doOnSelected {
-        textAdapter.selectAt(it)
+      doOnSelected { position ->
+        adapter.selectAt(position)
       }
-      doOnScroll { position, offsetValue ->
+      doOnScrolled { position, offsetValue ->
         linearLayoutManager.scrollToPositionWithOffset(
           position,
           (recycler_view.measuredWidth / 5 * offsetValue).toInt()
@@ -56,6 +56,6 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun onItemClick(position: Int) {
-    indicator.smoothScrollTo(((position - textAdapter.checkedPosition).toFloat()))
+    sliding_indicator.smoothScrollTo(((position - adapter.checkedPosition).toFloat()))
   }
 }
