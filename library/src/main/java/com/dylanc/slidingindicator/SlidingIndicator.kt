@@ -3,10 +3,12 @@ package com.dylanc.slidingindicator
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +25,7 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
   private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
   private val padding = 8.dp
   private var autoCenter = true
+  private var transparentEdge = false
   private var scaleHeight = 0f
   private var scaleWidth = 0f
   private var pointerHeight = 0f
@@ -65,6 +68,8 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
     scaleColor = array.getColor(R.styleable.SlidingIndicator_scaleColor, Color.WHITE)
     selectedColor =
       array.getColor(R.styleable.SlidingIndicator_selectedColor, Color.parseColor("#FF5722"))
+    transparentEdge =
+      array.getBoolean(R.styleable.SlidingIndicator_transparentEdge, false)
 
     paint.strokeCap = if (array.getInt(R.styleable.SlidingIndicator_scaleStyle, -1) == -1) {
       Paint.Cap.ROUND
@@ -143,7 +148,11 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
           paint
         )
       } else {
-        paint.color = scaleColor
+        paint.color = if (transparentEdge) {
+          scaleColor.convertAlpha(1 - (measuredWidth / 2 - startX - i * scaleSpan).absoluteValue / measuredWidth * 2)
+        } else {
+          scaleColor
+        }
         paint.strokeWidth = scaleWidth
         canvas.drawLine(
           startX + i * scaleSpan,
@@ -230,5 +239,4 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
     val waveAmplitude = (pointerHeight - scaleHeight) / 2
     return (waveAmplitude * cos(2 * Math.PI / waveLength * (x - measuredWidth / 2f)) + waveAmplitude).toFloat()
   }
-
 }

@@ -12,6 +12,7 @@
     <attr name="extraScaleCount" format="integer" />
     <attr name="scaleColor" format="color" />
     <attr name="selectedColor" format="color" />
+    <attr name="transparentEdge" format="boolean" />
     <attr name="scaleStyle">
       <enum name="roundCap" value="-1" />
       <enum name="square" value="-2" />
