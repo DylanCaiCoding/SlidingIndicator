@@ -1,5 +1,7 @@
 package com.dylanc.slidingindicator
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,7 +14,6 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.animation.doOnEnd
 import kotlin.math.absoluteValue
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -53,6 +54,7 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
     }
   private var doOnSelected: ((Int) -> Unit)? = null
   private var doOnScroll: ((Int, Float) -> Unit)? = null
+  private var animator: ObjectAnimator? = null
 
   init {
     val array = context.obtainStyledAttributes(attrs, R.styleable.SlidingIndicator)
@@ -175,6 +177,8 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
     val x = event.x
     when (event.action) {
       MotionEvent.ACTION_DOWN -> {
+        animator?.cancel()
+        animator = null
         lastX = x
       }
       MotionEvent.ACTION_MOVE -> {
@@ -226,17 +230,38 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
   }
 
   fun smoothScrollTo(offsetValue: Float) {
-    ObjectAnimator.ofFloat(this, "selectedValue", selectedValue, selectedValue + offsetValue)
-      .apply {
-        doOnEnd {
-          selectedIndex = selectedValue.toInt()
+    //todo 支持在动画未执行完时再次滑动
+    if (animator != null && animator!!.isRunning) {
+      return
+    }
+    animator =
+      ObjectAnimator.ofFloat(this, "selectedValue", selectedValue, selectedValue + offsetValue)
+        .apply {
+          addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+              selectedIndex = selectedValue.toInt()
+              animator = null
+            }
+          })
         }
-      }
-      .start()
+    animator?.start()
   }
 
   private fun waveHeight(x: Float): Float {
     val waveAmplitude = (pointerHeight - scaleHeight) / 2
     return (waveAmplitude * cos(2 * Math.PI / waveLength * (x - measuredWidth / 2f)) + waveAmplitude).toFloat()
+  }
+
+  private val Int.dp get() = toFloat().dp
+
+  private val Float.dp
+    get() = TypedValue.applyDimension(
+      TypedValue.COMPLEX_UNIT_DIP, this, Resources.getSystem().displayMetrics
+    )
+
+  private fun Int.convertAlpha(alpha: Float): Int {
+    val a = 255.coerceAtMost(0.coerceAtLeast((alpha * 255).toInt())) shl 24
+    val rgb = 0x00ffffff and this
+    return a + rgb
   }
 }
