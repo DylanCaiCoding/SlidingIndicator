@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
  * @author Dylan Cai
  */
 abstract class CheckableAdapter<T, VH : RecyclerView.ViewHolder>(
-  list: List<T>
+  list: List<T>, checkedPosition: Int = 0
 ) : RecyclerView.Adapter<VH>() {
 
-  var checkedPosition = 0
+  var checkedPosition = checkedPosition
     private set
 
   private var onItemClick: ((Int) -> Unit)? = null
@@ -26,22 +26,18 @@ abstract class CheckableAdapter<T, VH : RecyclerView.ViewHolder>(
     holder.itemView.setOnClickListener {
       onItemClick?.invoke(position)
     }
-    onBindViewHolder(holder, position, list[position].data, list[position].isChecked)
+    onBindViewHolder(holder, list[position].data, list[position].isChecked)
   }
 
   override fun getItemCount() = list.size
 
-  abstract fun onBindViewHolder(
-    holder: VH,
-    position: Int,
-    item: T,
-    isChecked: Boolean
-  )
+  abstract fun onBindViewHolder(holder: VH, item: T, isChecked: Boolean)
 
   fun selectAt(position: Int) {
     list[checkedPosition].isChecked = false
     list[position].isChecked = true
     checkedPosition = position
+    notifyDataSetChanged()
   }
 
   fun onItemClick(block: (Int) -> Unit) {

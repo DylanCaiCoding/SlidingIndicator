@@ -15,7 +15,7 @@ class TextAdapter(list: List<String>) : CheckableAdapter<String, TextAdapter.Vie
       LayoutInflater.from(parent.context).inflate(R.layout.recycler_item_text, parent, false)
     )
 
-  override fun onBindViewHolder(holder: ViewHolder, position: Int, item: String, isChecked: Boolean) {
+  override fun onBindViewHolder(holder: ViewHolder, item: String, isChecked: Boolean) {
     holder.itemView.apply {
       tv_content.text = item
       if (isChecked) {
