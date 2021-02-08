@@ -11,7 +11,7 @@
     android:id="@+id/recycler_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:layout_constraintBottom_toTopOf="@+id/sliding_indicator" />
+    app:layout_constraintBottom_toTopOf="@+id/sliding_indicator"/>
 
   <com.dylanc.slidingindicator.SlidingIndicator
     android:id="@+id/sliding_indicator"

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dylanc.slidingindicator.adapter.CheckableAdapter
 import kotlinx.android.synthetic.main.recycler_item_text.view.*
 
-class TextAdapter(list: List<String>) : CheckableAdapter<String, TextAdapter.ViewHolder>(list) {
+class TextAdapter : CheckableAdapter<String, TextAdapter.ViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
     ViewHolder(

@@ -48,13 +48,15 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
       invalidate()
     }
   var selectedIndex = 0
-    private set(value) {
+    internal set(value) {
+      if (field == value) return
       field = value
-      doOnSelected?.invoke(value)
+      doOnSelected.forEach { it(value) }
     }
-  private var doOnSelected: ((Int) -> Unit)? = null
+  private var doOnSelected: MutableList<(Int) -> Unit> = arrayListOf()
   private var doOnScroll: ((Int, Float) -> Unit)? = null
   private var animator: ObjectAnimator? = null
+  var scrollSelect = true
 
   init {
     val array = context.obtainStyledAttributes(attrs, R.styleable.SlidingIndicator)
@@ -199,7 +201,7 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
   }
 
   fun doOnSelected(block: (Int) -> Unit) {
-    doOnSelected = block
+    doOnSelected.add(block)
   }
 
   fun doOnScrolled(block: (Int, Float) -> Unit) {
@@ -216,6 +218,9 @@ class SlidingIndicator(context: Context, attrs: AttributeSet) : View(context, at
       selectedValue + offsetValue <= 0f -> 0f
       selectedValue + offsetValue >= maxValue -> maxValue.toFloat()
       else -> selectedValue + offsetValue
+    }
+    if (!scrollSelect) {
+      return
     }
 
     if (offsetValue > 0 && selectedValue.roundToInt() != selectedIndex) {

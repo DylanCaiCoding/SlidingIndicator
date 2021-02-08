@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 
 /**
+ * Add empty views in the front and back
+ *
  * @author Dylan Cai
  */
 internal class DecoratedAdapter(

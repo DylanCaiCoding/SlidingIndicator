@@ -6,25 +6,28 @@ import androidx.recyclerview.widget.RecyclerView
  * @author Dylan Cai
  */
 abstract class CheckableAdapter<T, VH : RecyclerView.ViewHolder>(
-  list: List<T>, checkedPosition: Int = 0
+  list: List<T> = emptyList(), checkedPosition: Int = 0
 ) : RecyclerView.Adapter<VH>() {
 
+  private lateinit var list: CheckableList<T>
+  private var onItemClickListeners: MutableList<(Int) -> Unit> = arrayListOf()
   var checkedPosition = checkedPosition
     private set
 
-  private var onItemClick: ((Int) -> Unit)? = null
+  init {
+    submitList(list)
+  }
 
-  private val list = mutableListOf<CheckableItem<T>>()
-    .apply {
-      list.forEach {
-        add(CheckableItem(it))
+  fun submitList(list: List<T>) {
+    this.list = list.toCheckableList()
+      .apply {
+        if (list.isNotEmpty()) this[checkedPosition].isChecked = true
       }
-      this[checkedPosition].isChecked = true
-    }
+  }
 
   override fun onBindViewHolder(holder: VH, position: Int) {
     holder.itemView.setOnClickListener {
-      onItemClick?.invoke(position)
+      onItemClickListeners.forEach { it(position) }
     }
     onBindViewHolder(holder, list[position].data, list[position].isChecked)
   }
@@ -33,14 +36,14 @@ abstract class CheckableAdapter<T, VH : RecyclerView.ViewHolder>(
 
   abstract fun onBindViewHolder(holder: VH, item: T, isChecked: Boolean)
 
+  fun addOnItemClickListener(block: (Int) -> Unit) {
+    onItemClickListeners.add(block)
+  }
+
   fun selectAt(position: Int) {
     list[checkedPosition].isChecked = false
     list[position].isChecked = true
     checkedPosition = position
     notifyDataSetChanged()
-  }
-
-  fun onItemClick(block: (Int) -> Unit) {
-    onItemClick = block
   }
 }
