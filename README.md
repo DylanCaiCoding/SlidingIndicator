@@ -40,6 +40,9 @@
 #### 与 RecyclerView 联动
 
 ```kotlin
+recycler_view.adapter = DecoratedAdapter(adapter, spanCount = 5)
 slidingIndicator.maxValue = items.size - 1
 slidingIndicator.setupWithRecyclerView(recyclerView, spanCount = 5, scrollSelect = true)
 ```
+
+DecoratedAdapter 的作用是对普通的适配器进行装饰，比如这里均分成 5 列，并在前后补充空白项，使第一个能居中选中。
